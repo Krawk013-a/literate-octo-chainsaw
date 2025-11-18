@@ -21,6 +21,7 @@ async function main() {
   await prisma.lessonSection.deleteMany();
   await prisma.lesson.deleteMany();
   await prisma.module.deleteMany();
+  await prisma.courseEnrollment.deleteMany();
   await prisma.course.deleteMany();
   await prisma.challenge.deleteMany();
   await prisma.friendship.deleteMany();
@@ -125,6 +126,7 @@ async function main() {
       email: 'demo@example.com',
       username: 'demo_user',
       password: hashedPassword,
+      role: 'learner',
       profile: {
         create: {
           firstName: 'Demo',
@@ -160,6 +162,43 @@ async function main() {
   });
 
   console.log(`✅ Created demo user: ${demoUser.username}`);
+
+  console.log('👑 Creating admin user...');
+  const adminPassword = await bcrypt.hash('admin123', 10);
+  const adminUser = await prisma.user.create({
+    data: {
+      email: 'admin@example.com',
+      username: 'admin_user',
+      password: adminPassword,
+      role: 'admin',
+      profile: {
+        create: {
+          firstName: 'Admin',
+          lastName: 'User',
+          bio: 'Platform administrator',
+          timezone: 'UTC',
+          language: 'en',
+        },
+      },
+      preferences: {
+        create: {
+          dailyGoalMinutes: 30,
+          emailNotifications: true,
+          pushNotifications: true,
+          soundEnabled: true,
+          vibrationEnabled: true,
+          darkMode: false,
+          autoPlayAudio: true,
+          showTranslations: true,
+          difficultyLevel: 'advanced',
+          reminderTime: '19:00',
+          weeklyReportDay: 1,
+        },
+      },
+    },
+  });
+
+  console.log(`✅ Created admin user: ${adminUser.username}`);
 
   // Seed Sample Course (Spanish for English Speakers)
   console.log('📚 Creating sample course...');

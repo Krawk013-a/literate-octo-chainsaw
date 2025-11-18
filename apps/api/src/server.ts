@@ -6,6 +6,9 @@ import http from 'http';
 import { env } from './config/env';
 import { disconnectDatabase } from './config/database';
 import healthRoutes from './routes/health.routes';
+import publicContentRoutes from './routes/public-content.routes';
+import contentRoutes from './routes/content.routes';
+import learnerRoutes from './routes/learner.routes';
 import { globalRateLimiter } from './middleware/rate-limiter';
 import { requestLogger, traceIdMiddleware } from './middleware/logger';
 import { errorHandler } from './middleware/error-handler';
@@ -48,6 +51,9 @@ export function createApp(): Express {
 
   // Routes
   app.use('/', healthRoutes);
+  app.use('/api/content', publicContentRoutes);
+  app.use('/api/admin/content', contentRoutes);
+  app.use('/api/learner', learnerRoutes);
 
   // API routes placeholder
   app.get('/api/hello', (_req: Request, res: Response) => {
