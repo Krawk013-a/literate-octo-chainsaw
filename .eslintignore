@@ -6,3 +6,5 @@ coverage/
 *.config.js
 pnpm-lock.yaml
 .eslintrc.json
+**/generated/**
+**/.next/**

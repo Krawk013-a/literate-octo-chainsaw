@@ -1,25 +1,33 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
+import { env } from './config/env';
+import { startServer, gracefulShutdown } from './server';
 
-const app = express();
-const PORT = process.env.PORT ?? 5000;
+// Export app and server for testing
+export { createApp, createServer, startServer, gracefulShutdown } from './server';
 
-app.use(cors());
-app.use(express.json());
+// Start server if not in test environment
+if (env.NODE_ENV !== 'test') {
+  startServer().catch((error) => {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  });
 
-app.get('/health', (_req: Request, res: Response) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
+  // Handle graceful shutdown
+  const signals = ['SIGTERM', 'SIGINT'] as const;
+  signals.forEach((signal) => {
+    process.on(signal, async () => {
+      await gracefulShutdown();
+      process.exit(0);
+    });
+  });
 
-app.get('/api/hello', (_req: Request, res: Response) => {
-  res.json({ message: 'Hello from Express + TypeScript!' });
-});
+  // Handle uncaught errors
+  process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+    process.exit(1);
+  });
 
-if (process.env.NODE_ENV !== 'test') {
-  app.listen(PORT, () => {
-    console.log(`🚀 API server running on http://localhost:${PORT}`);
-    console.log(`Health check: http://localhost:${PORT}/health`);
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    process.exit(1);
   });
 }
-
-export { app };

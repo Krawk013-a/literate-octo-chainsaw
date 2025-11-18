@@ -173,6 +173,10 @@ pnpm typecheck
 - **tsx** - TypeScript execution for development
 - **Vitest** - Unit testing
 - **Supertest** - API testing
+- **Helmet** - Security headers
+- **Socket.IO** - WebSocket support
+- **Prisma** - ORM and database migration
+- **Zod** - Schema validation
 
 ### Shared Tooling
 
@@ -180,6 +184,33 @@ pnpm typecheck
 - **ESLint** - Code linting (with React, TypeScript, and accessibility plugins)
 - **Prettier** - Code formatting
 - **TypeScript** - Shared base configuration
+
+## 🏗️ Backend Architecture
+
+The API follows a layered, modular architecture for maintainability and scalability. See [`apps/api/ARCHITECTURE.md`](./apps/api/ARCHITECTURE.md) for detailed documentation.
+
+### Core Features
+
+- **Middleware Stack**: Security (Helmet), CORS, compression, request logging with trace IDs, rate limiting
+- **Error Handling**: Centralized error handler with trace IDs and standardized JSON responses
+- **Database Integration**: Prisma ORM with PostgreSQL connection pooling and health checks
+- **WebSocket Support**: Socket.IO with auth hooks and namespace planning for notifications, live exercises, and leaderboards
+- **Environment Management**: Zod validation for environment variables across dev/test/prod
+- **Health Checks**: `/health` endpoint returning database connectivity and version info
+
+### Directory Structure
+
+```
+apps/api/src/
+├── config/       # Environment & database setup
+├── middleware/   # Express middleware
+├── routes/       # API endpoints
+├── services/     # Business logic
+├── utils/        # Helper functions
+├── websocket/    # Socket.IO configuration
+├── index.ts      # Entry point
+└── server.ts     # App & server setup
+```
 
 ## 🌟 Adding New Packages
 
