@@ -8,7 +8,7 @@ export interface AuthRequest extends Request {
 
 export function authenticate(
   req: AuthRequest,
-  res: Response,
+  _res: Response,
   next: NextFunction,
 ): void {
   try {
@@ -33,7 +33,7 @@ export function authenticate(
 }
 
 export function requireRole(...roles: string[]) {
-  return (req: AuthRequest, res: Response, next: NextFunction): void => {
+  return (req: AuthRequest, _res: Response, next: NextFunction): void => {
     if (!req.user) {
       return next(new AppError(401, 'Authentication required'));
     }

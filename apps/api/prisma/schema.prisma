@@ -37,6 +37,7 @@ model User {
   exerciseAttempts   ExerciseAttempt[]
   spacedRepetitionQueue SpacedRepetitionQueue[]
   courseEnrollments CourseEnrollment[]
+  passwordResetTokens PasswordResetToken[]
 
   @@map("users")
 }
@@ -418,4 +419,20 @@ model Notification {
 
   @@index([userId, isRead])
   @@map("notifications")
+}
+
+// Password Reset
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@map("password_reset_tokens")
 }

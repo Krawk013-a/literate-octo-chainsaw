@@ -7,8 +7,11 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url('Invalid DATABASE_URL format'),
   CORS_ORIGIN: z.string().default('http://localhost:3000'),
   JWT_SECRET: z.string().min(8, 'JWT_SECRET must be at least 8 characters'),
-  JWT_EXPIRES_IN: z.string().default('7d'),
+  JWT_EXPIRES_IN: z.string().default('1h'),
+  JWT_REFRESH_SECRET: z.string().min(8, 'JWT_REFRESH_SECRET must be at least 8 characters'),
+  JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
+  FRONTEND_URL: z.string().default('http://localhost:3000'),
 });
 
 export type Environment = z.infer<typeof envSchema>;
