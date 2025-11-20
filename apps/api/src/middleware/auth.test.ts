@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { authenticate, requireRole, requireAdmin, requireLearner, AuthRequest } from './auth';
 import { signToken } from '../utils/jwt';
-import { AppError } from '../utils/error';
 
 describe('Auth Middleware', () => {
   let mockReq: Partial<AuthRequest>;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let mockRes: Partial<Response>;
   let mockNext: NextFunction;
 
@@ -14,7 +14,7 @@ describe('Auth Middleware', () => {
       headers: {},
     };
     mockRes = {};
-    mockNext = vi.fn();
+    mockNext = vi.fn() as unknown as NextFunction;
   });
 
   describe('authenticate', () => {
